@@ -12,7 +12,7 @@ pipeline {
   stages {
     stage('Checkout del repositorio') {
       steps {
-        git url: 'https://github.com/Jhoan-Pd/Practica.git', branch: 'main'
+        git url: 'https://github.com/DavUccProjects/Game-project2.git', branch: 'main'
       }
     }
 
