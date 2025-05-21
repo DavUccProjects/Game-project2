@@ -6,19 +6,13 @@ pipeline {
   }
 
   tools {
-    nodejs 'Node 20' // Asegúrate de tener esto configurado en Jenkins
+    nodejs 'Node 20'
   }
 
   stages {
     stage('Checkout del repositorio') {
       steps {
         git url: 'https://github.com/DavUccProjects/Game-project2.git', branch: 'main'
-      }
-    }
-
-    stage('Limpiar Workspace') {
-      steps {
-        deleteDir()
       }
     }
 
@@ -30,7 +24,8 @@ pipeline {
 
     stage('Ejecutar pruebas unitarias') {
       steps {
-        bat 'npm test -- --watch=false'
+        // Si tu proyecto tiene pruebas configuradas
+        bat 'npm test -- --watchAll=false'
       }
     }
 
