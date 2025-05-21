@@ -1,40 +1,49 @@
-pipeline {
+ pipeline {
   agent any
 
   environment {
-    CI = "false" // Desactiva errores por warnings en React
-  }
-
-  tools {
-    nodejs 'Node 20' // Asegúrate de tener esto configurado en Jenkins
+    CI = "false" 
+    VERCEL_TOKEN = credentials('id vercel') // Id del token de vercel ya configurado en Jenkins 
   }
 
   stages {
-    stage('Checkout del repositorio') {
+    stage('Declarative: Checkout SCM') {
       steps {
-        git url: 'https://github.com/Jhoan-Pd/Practica.git', branch: 'main'
+        checkout scm
       }
     }
 
-    stage('Limpiar Workspace') {
+    stage('Tool Install') {
+      steps {
+        tool name: 'Node 20', type: 'nodejs'
+      }
+    }
+
+    stage('Clean workspace') {
       steps {
         deleteDir()
       }
     }
 
-    stage('Instalar dependencias') {
+    stage('Checkout') {
+      steps {
+        git url: 'https://github.com/guswill24/node-project.git', branch: 'main'
+      }
+    }
+
+    stage('Install dependencies') {
       steps {
         bat 'npm install --legacy-peer-deps'
       }
     }
 
-    stage('Ejecutar pruebas unitarias') {
+    stage('Run tests') {
       steps {
-        bat 'npm test -- --watch=false'
+        bat 'npm test -- --watchAll=false'
       }
     }
 
-    stage('Compilar el proyecto') {
+    stage('Build app') {
       steps {
         bat 'npm run build'
       }
@@ -43,15 +52,15 @@ pipeline {
 
   post {
     success {
-      echo '✅ Pipeline ejecutado correctamente. Build exitoso.'
+      echo "✅ Pipeline ejecutado correctamente. Build exitoso."
     }
 
     failure {
-      echo '❌ Error en alguna etapa del pipeline. Revisar los logs.'
+      echo "❌ Error en alguna etapa del pipeline. Revisar los logs."
     }
 
     always {
-      echo '📦 Pipeline finalizado (éxito o fallo).'
+      echo "📦 Pipeline finalizado (éxito o fallo). Puedes revisar el historial."
     }
   }
 }
