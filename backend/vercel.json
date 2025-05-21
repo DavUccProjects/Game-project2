@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "backend/app.js", "use": "@vercel/node" },
+    { "src": "game-project/package.json", "use": "@vercel/static-build", "config": { "distDir": "dist" } }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "backend/app.js" },
+    { "src": "/(.*)", "dest": "game-project/$1" },
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "game-project/index.html" }
+  ]
+}
